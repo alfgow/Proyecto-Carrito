@@ -51,6 +51,9 @@ const carritoHTML = () => {
       <td>${curso.titulo}</td>
       <td>${curso.precio}</td>
       <td>${curso.cantidad}</td>
+      <td>
+          <a href="#" class="borrar-curso" data-id=${curso.id}> X </a>
+      </td>
     `;
 		// Agregando el HTML al contenedor
 		contenedorCarrito.appendChild(row);
