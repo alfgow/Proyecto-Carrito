@@ -7,6 +7,20 @@ let articulosCarrito = [];
 
 //! Funciones
 
+// eliminar curso del carrito
+
+const eliminarCurso = (e) => {
+	e.preventDefault();
+	const cursoId = e.target.getAttribute("data-id");
+	e.target.classList.contains("borrar-curso")
+		? (articulosCarrito = articulosCarrito.filter(
+				(curso) => curso.id !== cursoId
+		  ))
+			? carritoHTML()
+			: null
+		: null;
+};
+
 //?                         1.- Leer contenido del curso que estamos seleccionando
 
 const leerDatos = (e) => {
@@ -25,9 +39,29 @@ const leerDatos = (e) => {
 		cantidad: 1,
 	};
 
+	//?        2.1 Revisar si un elemento ya existe en el carrito
+	const existe = articulosCarrito.some(
+		(curso) => curso.id === infoCurso.id
+	);
+
+	if (existe) {
+		// Actualizamos la cantidad
+		const cursos = articulosCarrito.map((curso) => {
+			if (curso.id === infoCurso.id) {
+				curso.cantidad++;
+				return curso;
+			} else {
+				return curso;
+			}
+		});
+		articulosCarrito = [...cursos];
+	} else {
+		// Agregamos el curso al carrito
+		articulosCarrito = [...articulosCarrito, infoCurso];
+	}
+
 	//?                     3.- Agregar Elementos al Arreglo articulosCarrito
 
-	articulosCarrito = [...articulosCarrito, infoCurso];
 	console.log(articulosCarrito);
 	carritoHTML();
 };
@@ -45,14 +79,16 @@ const carritoHTML = () => {
 	limpiarCarrito();
 	// Recorre el Carrito
 	articulosCarrito.forEach((curso) => {
+		const { img, titulo, precio, cantidad, id } = curso;
+
 		const row = document.createElement("tr");
 		row.innerHTML = `
-      <td><img src="${curso.img}" width = "100"></td>
-      <td>${curso.titulo}</td>
-      <td>${curso.precio}</td>
-      <td>${curso.cantidad}</td>
+      <td><img src="${img}" width = "100"></td>
+      <td>${titulo}</td>
+      <td>${precio}</td>
+      <td>${cantidad}</td>
       <td>
-          <a href="#" class="borrar-curso" data-id=${curso.id}> X </a>
+          <a href="#" class="borrar-curso" data-id=${id}> X </a>
       </td>
     `;
 		// Agregando el HTML al contenedor
@@ -71,4 +107,7 @@ cargarEventListeners();
 function cargarEventListeners() {
 	// Agregando un curso al carrito tras presionar el boton "Agregar al carrito"
 	listaCursos.addEventListener("click", agregarCurso);
+
+	// Eliminando curso del carrito
+	carrito.addEventListener("click", eliminarCurso);
 }
