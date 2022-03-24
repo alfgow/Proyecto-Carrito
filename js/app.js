@@ -21,6 +21,12 @@ const eliminarCurso = (e) => {
 		: null;
 };
 
+//? Muestra los cursos previamente seleccionados
+document.addEventListener("DOMContentLoaded", () => {
+	articulosCarrito = JSON.parse(localStorage.getItem("carrito")) || [];
+	carritoHTML();
+});
+
 //?                         1.- Leer contenido del curso que estamos seleccionando
 
 const leerDatos = (e) => {
@@ -94,7 +100,13 @@ const carritoHTML = () => {
 		// Agregando el HTML al contenedor
 		contenedorCarrito.appendChild(row);
 	});
+	// Agregar Carrito al Storage
+	sincronizarStorage();
 };
+
+function sincronizarStorage() {
+	localStorage.setItem("carrito", JSON.stringify(articulosCarrito));
+}
 
 //TODO            evento principal que llama todo Agregando Curso
 
